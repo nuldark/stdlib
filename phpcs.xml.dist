@@ -1,44 +1,20 @@
 <?xml version="1.0"?>
-<ruleset
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    name="Coding Standard"
-    xsi:noNamespaceSchemaLocation="tools/phpcs/vendor/squizlabs/php_codesniffer/phpcs.xsd"
->
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+
+    <arg name="basepath" value="."/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="80"/>
+
+    <!-- Show progress -->
+    <arg value="sp"/>
+
+    <!-- Paths to check -->
     <file>src</file>
     <file>tests</file>
 
-    <arg name="parallel" value="75"/>
-    <arg name="extensions" value="php"/>
-    <arg name="colors"/>
-    <arg value="sp"/>
-
-    <rule ref="PSR12"/>
-
-    <rule ref="Generic.PHP.BacktickOperator"/>
-    <rule ref="Generic.PHP.DeprecatedFunctions"/>
-    <rule ref="Generic.PHP.CharacterBeforePHPOpeningTag"/>
-
-    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
-    <rule ref="Generic.NamingConventions.ConstructorName"/>
-
-    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-
-    <rule ref="Generic.Commenting.Fixme"/>
-    <rule ref="Generic.Commenting.Todo"/>
-
-    <rule ref="Generic.Formatting.SpaceAfterCast"/>
-
-    <rule ref="Generic.Files.LineLength">
-        <properties>
-            <property name="ignoreComments" value="true"/>
-        </properties>
-    </rule>
-
-    <rule ref="Generic.CodeAnalysis.EmptyStatement">
-        <exclude name="Generic.CodeAnalysis.EmptyStatement.DetectedCatch"/>
-    </rule>
-
-    <rule ref="PSR2.ControlStructures.ElseIfDeclaration.NotAllowed">
-        <type>error</type>
-    </rule>
+    <!-- Include all rules from the Charon Coding Standard -->
+    <rule ref="Charon"/>
 </ruleset>

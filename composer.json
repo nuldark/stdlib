@@ -1,58 +1,41 @@
 {
-    "name": "nulldark/stdlib",
+    "name": "nuldark/stdlib",
     "description": "A library for representing and manipulating collections.",
     "license": "MIT",
     "type": "project",
-    "authors": [
-        {
-            "name": "Dominik Szamburski",
-            "email": "dominikszamburski99@gmail.com"
-        }
-    ],
-    "require-dev": {
-        "bamarni/composer-bin-plugin": "1.8.2"
+    "require": {
+        "php": "8.1.0 || ~8.2.0 || ~8.3.0"
     },
-    "minimum-stability": "stable",
+    "require-dev": {
+        "charonlab/coding-standard": "1.2.x-dev",
+        "phpunit/phpunit": "^11.1@dev",
+        "roave/security-advisories": "dev-latest",
+        "vimeo/psalm": "^6.0@dev"
+    },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Nulldark\\Stdlib\\": "src/Stdlib/"
+            "Nuldark\\Stdlib\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Nulldark\\Tests\\": "tests/"
+            "Nuldark\\Stdlib\\Tests\\": "tests/"
         }
     },
     "config": {
-        "sort-packages": true,
         "allow-plugins": {
-            "bamarni/composer-bin-plugin": true
-        }
-    },
-    "extra": {
-        "bamarni-bin": {
-            "bin-links": false,
-            "forward-command": true,
-            "target-directory": "tools"
-        }
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "platform": {
+            "php": "8.2.15"
+        },
+        "sort-packages": true
     },
     "scripts": {
-        "dev:analyze": [
-            "@dev:analyze:phpstan"
-        ],
-        "dev:analyze:phpstan": "bin/phpstan analyze --ansi --memory-limit=1G",
-        "dev:lint": [
-            "@dev:lint:fix",
-            "@dev:lint:style"
-        ],
-        "dev:lint:fix": "bin/phpcbf",
-        "dev:lint:style": "bin/phpcs --colors",
-        "dev:test": [
-            "@dev:lint",
-            "@dev:analyze",
-            "@dev:test:unit"
-        ],
-        "dev:test:coverage:html": "bin/phpunit --coverage-html .build/coverage/html/",
-        "dev:test:phpunit": "bin/phpunit"
+        "lint-check": "phpcs",
+        "lint-fix": "phpcbf",
+        "static-analysis": "psalm --shepherd --stats",
+        "test": "phpunit --colors=always"
     }
 }

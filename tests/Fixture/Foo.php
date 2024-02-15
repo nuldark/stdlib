@@ -1,6 +1,6 @@
 <?php
 
-namespace Nulldark\Tests\Fixtures;
+namespace Nuldark\Stdlib\Tests\Fixture;
 
 class Foo
 {
