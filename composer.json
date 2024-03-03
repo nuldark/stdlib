@@ -1,10 +1,10 @@
 {
     "name": "nuldark/stdlib",
-    "description": "A library for representing and manipulating collections.",
+    "description": "An extension to the Standard PHP Library (SPL), introducing abstract data types like stacks, maps, and hash maps. Enjoy the benefits of class-based functions in PHP with an intuitive and object-oriented API.",
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "8.1.0 || ~8.2.0 || ~8.3.0"
+        "php": ">= 8.1"
     },
     "require-dev": {
         "charonlab/coding-standard": "1.2.x-dev",
