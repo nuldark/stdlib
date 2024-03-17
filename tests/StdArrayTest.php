@@ -94,9 +94,11 @@ class StdArrayTest extends \PHPUnit\Framework\TestCase
         $foo2 = new Foo(2, 'foo2');
 
         $stdArray = new StdArray([$foo1, $foo2]);
+        // phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter.Found
         $stdArray->each(function (Foo $foo) use (&$it) {
             $it++;
         });
+        // phpcs:enable
 
         self::assertEquals(2, $it);
     }
