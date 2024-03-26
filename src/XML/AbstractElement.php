@@ -11,8 +11,25 @@
 
 namespace Nuldark\Stdlib\XML;
 
+use Nuldark\Stdlib\XML\Exception\MissingAttributeException;
+use Nuldark\Stdlib\XML\Exception\RuntimeException;
+
 abstract class AbstractElement
 {
+    /**
+     * Gets a prefix for this element.
+     *
+     * @return null|string
+     */
+    abstract protected static function getNamespacePrefix(): ?string;
+
+    /**
+     * Gets a namespace URI for the element.
+     *
+     * @return string
+     */
+    abstract protected static function getNamespaceURI(): string;
+
     /**
      * Converts the current element to an XML element.
      *
@@ -27,18 +44,87 @@ abstract class AbstractElement
     abstract public function toXML(\DOMElement $parent = null): \DOMElement;
 
     /**
-     * Gets a prefix for this element.
+     * Coverts the given XML into an element instance.
      *
-     * @return null|string
+     * @param \DOMElement $xml
+     *  The sourced element.
+     *
+     * //phpcs:ignore @return static
+     *  Returns a new instance of the element.
+     *
+     * @throws \Exception If an error occurs while creating the element.
      */
-    abstract protected function getNamespacePrefix(): ?string;
+    public static function fromXML(/* phpcs:ignore  */ \DOMElement $xml): static {
+        throw new RuntimeException('Not implemented yet.');
+    }
 
     /**
-     * Gets a namespace URI for the element.
+     * Gets an attribute from element.
+     *
+     * @param \DOMElement $xml
+     *  The sourced element.
+     * @param string $attribute
+     *  The attribute name.
      *
      * @return string
+     *  Returns the attribute from element.
+     *
+     * @throws \Nuldark\Stdlib\XML\Exception\MissingAttributeException
      */
-    abstract protected function getNamespaceURI(): string;
+    public static function getAttribute(\DOMElement $xml, string $attribute): string {
+        if (!$xml->hasAttribute($attribute)) {
+            throw new MissingAttributeException(
+                "Attribute '$attribute' was missing."
+            );
+        }
+        return $xml->getAttribute($attribute);
+    }
+
+    /**
+     * Gets an optional attribute from element.
+     *
+     * @param \DOMElement $xml
+     *  The sourced element.
+     * @param string $attribute
+     *  The attribute name.
+     * @param string|null $default
+     *  The default value to return if the attribute does not exist.
+     *
+     * @return string|null
+     *   Returns the attribute from element.
+     */
+    public static function getOptionalAttribute(\DOMElement $xml, string $attribute, ?string $default = null): ?string {
+        if ($xml->hasAttribute($attribute)) {
+            return $default;
+        }
+
+        return $xml->getAttribute($attribute);
+    }
+
+    /**
+     * Transforms given XML into class instances.
+     *
+     * @param \DOMElement $element
+     *  The sourced element.
+     * @return array
+     *  Returns an array of elements.
+     * @throws \Exception
+     */
+    public static function getElementOfClass(\DOMElement $element): array {
+        $classes = [];
+
+        foreach ($element->childNodes as $child) {
+            if (!($child instanceof \DOMElement)) {
+                continue;
+            }
+
+            if ($child->localName === static::getTagName() && $child->namespaceURI === static::getNamespaceURI()) {
+                $classes[] = static::fromXML($child);
+            }
+        }
+
+        return $classes;
+    }
 
     /**
      * Creates a new XML structure for the current element.
@@ -52,7 +138,7 @@ abstract class AbstractElement
      * @throws \DOMException If an error occurs while creating the element.
      */
     protected function createElement(\DOMElement $parent = null): \DOMElement {
-        $namespace = $this->getNamespaceURI();
+        $namespace = static::getNamespaceURI();
         $qualifiedName = $this->getQualifiedName();
 
         if ($parent === null) {
@@ -74,8 +160,8 @@ abstract class AbstractElement
      *  Returns qualified name.
      */
     private function getQualifiedName(): string {
-        $prefix = $this->getNamespacePrefix();
-        $qualifiedName = $this->getTagName();
+        $prefix = static::getNamespacePrefix();
+        $qualifiedName = static::getTagName();
 
         return $prefix !== null ? ($prefix . ':' . $qualifiedName) : $qualifiedName;
     }
@@ -86,7 +172,7 @@ abstract class AbstractElement
      * @return string
      *  Returns tag name.
      */
-    private function getTagName(): string {
+    private static function getTagName(): string {
         return \array_slice(\explode('\\', static::class), -1)[0];
     }
 }
